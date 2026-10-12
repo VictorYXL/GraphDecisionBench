@@ -17,9 +17,8 @@ INK = "#172b4d"
 MUTED = "#52647d"
 TEAL = "#087f8c"
 BLUE = "#4258b8"
-PURPLE = "#7850a3"
 COLORS = {"native": TEAL, "generation": BLUE, "scoring": "#b46c13",
-          "no_reasoning": "#245fc7", "reasoning": PURPLE}
+          "no_reasoning": BLUE, "reasoning": BLUE}
 
 
 class SVG:
@@ -67,14 +66,15 @@ def yrow(index):
 def label(svg, model, x, y, size=17):
     svg.rect(x, y - 12, 4, 16, COLORS[model["family"]], radius=2)
     svg.text(x + 13, y + 1, model["label"], size=size,
-             weight=700 if model["id"] in ("jev", "gpt54", "astra") else 400)
+             weight=700 if model["id"] == "jev" else 400)
 
 
 def heatmap(data, kind):
     rq1 = kind == "rq1"
-    title = "Structure is not a single skill" if rq1 else "More information is not always better"
-    svg = SVG(802, title, "All fourteen configurations. Values are percentages; higher is better. "
-              "Astra is a separate reasoning-enabled reference. U means unsupported.")
+    title = "Six structural query tasks" if rq1 else "Graph-text decisions under matched inputs"
+    svg = SVG(952 if rq1 else 1000, title,
+              "All fourteen configurations. Values are percentages; higher is better. "
+              "Task and input-condition definitions appear below the results. U means unsupported.")
     svg.text(30, 37, "01 / GRAPH COGNITION" if rq1 else "02 / GRAPH + TEXT", 14, TEAL, 700)
     svg.text(30, 75, title, 30, weight=700)
     svg.text(30, 105, "800 queries  /  4 data sources  /  Equal weight per size, 8-12 vertices" if rq1
@@ -83,7 +83,7 @@ def heatmap(data, kind):
     left, width = (266, 132) if rq1 else (248, 78)
     headers = data["rq1_tasks"] if rq1 else data["rq2_conditions"] * 2
     if not rq1:
-        svg.text(443, 135, "ogbn-arxiv  /  Accuracy", 16, BLUE, 700, "middle")
+        svg.text(443, 135, "ogbn-arxiv  /  40-class accuracy", 16, BLUE, 700, "middle")
         svg.text(858, 135, "STaRK-Prime  /  Hit@1", 16, TEAL, 700, "middle")
     for j, heading in enumerate(headers):
         x = left + j * width + (24 if not rq1 and j >= 5 else 0)
@@ -94,8 +94,6 @@ def heatmap(data, kind):
         y = yrow(i)
         if model["id"] == "jev":
             svg.rect(18, y - 18, 1084, 36, "#eff9f8", radius=7)
-        if model["id"] == "astra":
-            svg.rect(18, y - 18, 1084, 36, "#f4f0f8", radius=7)
         label(svg, model, 30, y + 5)
         values = model["rq1"] if rq1 else model["arxiv"] + model["prime"]
         for j, value in enumerate(values):
@@ -110,17 +108,48 @@ def heatmap(data, kind):
     for i in range(100):
         svg.rect(225 + i * 1.5, 748, 1.5, 13, mix("#edf7f6", "#066c78", i / 99))
     svg.text(391, 761, "0-100%", 14, MUTED)
-    svg.text(30, 784, "* Astra: observed medium reasoning. GPT-5.4: explicit none. Fixed model order, not a combined rank.",
-             14, MUTED)
+    if rq1:
+        svg.text(30, 805, "WHAT DOES EACH QUERY ASK?", 14, TEAL, 700)
+        definitions = (
+            ("Adjacency", "Does an edge connect the two vertices?"),
+            ("Degree", "How many neighbors does the vertex have?"),
+            ("Cycle", "Does any component contain a simple cycle?"),
+            ("Connectivity", "Is there a path between the two vertices?"),
+            ("Distance", "Is the shortest path at most two edges?"),
+            ("Articulation", "Does deleting the vertex increase component count?"),
+        )
+        for i, (task, question) in enumerate(definitions):
+            x, y = 30 + (i % 2) * 535, 833 + (i // 2) * 31
+            svg.text(x, y, task, 15, weight=700)
+            svg.text(x + 106, y, question, 15, MUTED)
+        svg.text(30, 937, "Answer on the supplied undirected graph, including isolates. Degree: 0 to n-1; other tasks: yes/no.",
+                 14, MUTED)
+    else:
+        conditions = (
+            ("T", "Target / candidate text", "No explicit edges"),
+            ("G", "Relational evidence", "No added entity descriptions"),
+            ("TG", "Entity + context text", "With explicit edges"),
+            ("BAG", "Same nodes + text as TG", "Only explicit edges removed"),
+            ("A / A*", "Baseline evidence", "No added descriptions / edges"),
+        )
+        for i, (name, first, second) in enumerate(conditions):
+            x = 30 + i * 214
+            svg.rect(x, 790, 204, 112, "#f0f6fa", radius=8)
+            svg.text(x + 12, 819, name, 20, TEAL, 700)
+            svg.text(x + 12, 850, first, 14, MUTED)
+            svg.text(x + 12, 875, second, 13, MUTED)
+        svg.text(30, 928, "TG - BAG: explicit-edge contribution. G - A/A*: relational evidence over the baseline.", 16, weight=700)
+        svg.text(30, 954, "arXiv: shared training-label anchors and graph-selected context IDs; T is not graph-independent.", 14, MUTED)
+        svg.text(30, 980, "Prime: query + 40 candidate IDs, names and types in every input; G/TG/BAG also retain context entities.", 14, MUTED)
     return svg.finish()
 
 
 def optimization(data):
-    svg = SVG(1420, "Good choices need good solutions",
+    svg = SVG(1450, "Sequential graph optimization",
               "All fourteen configurations across four optimization tasks. A direct, C heuristic proposals. "
               "Lower gaps are better. Each task has its own axis; dashed bars and bracketed counts mark partial coverage.")
     svg.text(30, 37, "03 / SEQUENTIAL DECISIONS", 14, TEAL, 700)
-    svg.text(30, 75, "Good choices need good solutions", 30, weight=700)
+    svg.text(30, 75, "Sequential graph optimization", 30, weight=700)
     svg.text(30, 106, "Mean reference gap on completed graphs  /  Lower is better  /  Ten graphs scheduled per mode", 16, MUTED)
     svg.rect(30, 128, 23, 10, "#8796ac", radius=2)
     svg.text(62, 138, "A  Direct construction", 15, MUTED)
@@ -128,13 +157,15 @@ def optimization(data):
     svg.text(322, 138, "C  Heuristic proposals", 15, MUTED)
     svg.text(610, 138, "Right-hand values: A / C", 15, MUTED)
     maxima = (600, 120, 100, 0.6)
+    objectives = ("Minimize closed-tour length", "Maximize signed crossing-edge weight",
+                  "Maximize final spread from two seeds", "Maximize modularity with at most two groups")
     for task_index, task in enumerate(data["rq3_tasks"]):
         x = 22 + (task_index % 2) * 549
         top = 165 + (task_index // 2) * 595
         svg.rect(x, top, 527, 575, "#f9fbfd", radius=12, stroke="#e3eaf2")
         unit = "absolute Q gap" if task_index == 3 else "gap %"
         svg.text(x + 18, top + 30, task, 21, weight=700)
-        svg.text(x + 18, top + 54, unit + "  |  independent task scale", 13, MUTED)
+        svg.text(x + 18, top + 54, objectives[task_index] + "  |  " + unit, 13, MUTED)
         px, pw = x + 168, 185
         maximum = maxima[task_index]
         for tick in (0, maximum / 2, maximum):
@@ -147,8 +178,6 @@ def optimization(data):
             a, c, na, nc = model["rq3"][task_index]
             if model["id"] == "jev":
                 svg.rect(x + 7, y - 12, 512, 30, "#e7f5f3", radius=4)
-            if model["id"] == "astra":
-                svg.rect(x + 7, y - 12, 512, 30, "#f0ebf7", radius=4)
             label(svg, model, x + 15, y + 6, size=12)
             for offset, value, count, color in ((-7, a, na, "#8796ac"), (5, c, nc, TEAL)):
                 if value is None:
@@ -166,11 +195,12 @@ def optimization(data):
                 number = f"{value:.4f}" if task_index == 3 else f"{value:.2f}"
                 return number if count == 10 else f"{number} [{count}]"
             svg.text(x + 511, y + 6, f"{formatted(a, na)} / {formatted(c, nc)}", 12,
-                     weight=700 if model["id"] in ("jev", "gpt54", "astra") else 400, anchor="end")
+                     weight=700 if model["id"] == "jev" else 400, anchor="end")
         svg.text(x + 18, top + 557, "[n] = n/10 complete; -- = no completed trajectory", 12, MUTED)
-    svg.text(30, 1379, "Partial subsets are not directly rankable against full coverage. Forced-only completions do not establish model support.",
+    svg.text(30, 1375, "A: all legal next actions. C: distinct actions proposed by four fixed rules; a singleton is forced without a model call.",
              14, MUTED)
-    svg.text(30, 1403, "* Astra uses reasoning; GPT-5.4 uses none. Modularity uses certified references; MaxCut uses historical BKS.", 14, MUTED)
+    svg.text(30, 1403, "Each task has its own axis. Partial subsets are not directly rankable against full coverage.", 14, MUTED)
+    svg.text(30, 1431, "References: TSP / LT exact optima; MaxCut historical BKS; modularity numerical MILP certificates.", 14, MUTED)
     return svg.finish()
 
 
@@ -209,8 +239,8 @@ def tables(data):
         "Primary aggregate results cover fourteen model-interface configurations across RQ1/RQ2/RQ3, "
         "with unsupported interfaces explicitly marked. Per-query and per-trajectory outputs are not "
         "distributed. Charts and tables render from the summary, not raw response replay.", "",
-        "GPT-5.4 uses explicit no reasoning. GPT-6-Astra uses observed medium reasoning "
-        "and is not a compute-matched baseline. Fixed model order is not an overall ranking.", "",
+        "Fixed model order is not an overall ranking. See the [task and input definitions](../README.md#rq1--graph-cognition) "
+        "and [model configurations](reproduction.md#model-configuration); inference budgets are not matched.", "",
         "## RQ1: size-equal task accuracy (%)", "",
         "| Model | " + " | ".join(data["rq1_tasks"]) + " |",
         "| --- | " + " | ".join(["---:"] * 6) + " |",
@@ -226,7 +256,8 @@ def tables(data):
             text.append("| " + model["label"] + " | " +
                         " | ".join("U" if v is None else str(v) for v in model[dataset]) + " |")
         text += ["", "100 queries per condition; higher is better. U = unsupported, not zero. "
-                 "Prime uses gold-containing candidate sets, not end-to-end retrieval.", ""]
+                 "Prime uses gold-containing candidate sets, not end-to-end retrieval. "
+                 "[T, G, TG, BAG and A/A* definitions](../README.md#rq2--graph-and-text).", ""]
     for index, task in enumerate(data["rq3_tasks"]):
         unit = "absolute Q" if index == 3 else "%"
         text += [f"## RQ3: {task} ({unit} gap)", "",

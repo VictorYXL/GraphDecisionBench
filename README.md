@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">
+  <a href="https://arxiv.org/abs/2610.06354">Paper</a> &nbsp;·&nbsp;
   <a href="#key-findings"><b>Highlights</b></a> &nbsp;·&nbsp;
   <a href="#rq1--graph-cognition">Graph cognition</a> &nbsp;·&nbsp;
   <a href="#rq2--graph-and-text">Graph + text</a> &nbsp;·&nbsp;
@@ -17,9 +18,13 @@ GraphDecisionBench compares Jev, related native selectors and language models th
 three complementary tests. The benchmark is model-independent; a common choice
 interface does not imply a common architecture or reasoning budget.
 
-**Primary results · October 2026.** All figures below use the primary
-aggregate results, not the older supporting experiments. GPT‑5.4 uses **no reasoning**;
-GPT‑6‑Astra is a **reasoning-enabled reference**. There is no cross-task overall rank.
+**Three research questions:** Can models answer structural queries, use textual
+and relational evidence, and build high-quality solutions through successive
+choices? The figures report the paper's primary cohorts, not older supporting
+experiments. Each task or input condition is evaluated separately; there is no
+cross-task overall rank. Interface and inference settings are documented in the
+[model configuration](docs/reproduction.md#model-configuration).
+
 The experiments span **fourteen model-interface configurations across RQ1, RQ2
 and RQ3**, with unsupported interfaces explicitly marked. The
 [summary data](data/results/summary.json) supply all charts and full tables;
@@ -40,6 +45,22 @@ different questions.
 
 **Six tasks · four real networks · 8–12 vertices · 800 queries per configuration.**
 
+Every query concerns the **supplied simple, undirected graph**, not the full
+source network. Isolated vertices remain part of the input.
+
+| Task | What the model must decide | Answer space |
+| --- | --- | --- |
+| **Adjacency** | Are the two specified vertices joined by an edge? | Yes / no |
+| **Exact degree** | How many neighbors does the specified vertex have? | Integers 0 to n−1 |
+| **Cycle existence** | Does any component contain a simple cycle through at least three vertices? | Yes / no |
+| **Pairwise connectivity** | Is there a path between the two specified vertices? | Yes / no |
+| **Distance threshold** | Is their unweighted shortest-path distance at most two? An unreachable pair is a no. | Yes / no |
+| **Articulation point** | Does deleting the specified vertex increase the number of connected components? | Yes / no |
+
+Pairwise connectivity does **not** require the whole graph to be connected.
+Articulation is defined relative to the original component count, even for an
+already disconnected graph.
+
 ![RQ1: size-equal accuracy for fourteen model configurations across adjacency, degree, cycle, connectivity, distance and articulation. Darker cells indicate higher accuracy.](assets/benchmark/structural-queries.svg)
 
 <p align="center">
@@ -51,16 +72,18 @@ different questions.
   adjacency, but the gap on degree and articulation is substantial.
 - **Scale weighting matters.** The primary task metric gives each graph size
   equal weight rather than pooling queries.
-- **The strongest reference is not compute-matched.** Astra reaches 100%
-  across the six tasks with reasoning enabled.
+- **Different predicates test different skills.** Recognizing an edge does not
+  establish accurate counting, path reasoning or sensitivity to vertex removal.
 
 <details>
 <summary><b>Metric and dataset notes</b></summary>
 
 Sources: Facebook, ca-GrQc, Power Grid and Human PPI, 200 queries each.
-There are 400 degree questions and 80 for each other task. The primary task
-score averages accuracy equally across sizes 8–12; illegal outputs count as
-incorrect. Labels are computed on exactly the supplied graph, including isolates.
+There are 400 degree questions and 80 for each other task. Within each
+source and size, binary tasks have two yes and two no queries; degree has two
+queries for every possible degree. These answer-balanced quotas do not represent
+the source networks' natural label frequencies. Independent graph algorithms
+compute the reference answers; illegal outputs count as incorrect.
 
 The heatmap uses the primary results; each task is a separate comparison,
 not part of a blended score.
@@ -71,6 +94,35 @@ not part of a blended score.
 
 **Two datasets · five matched inputs · 100 test queries per dataset and condition.**
 
+**ogbn-arxiv** asks for a paper's category among forty classes.
+**STaRK-Prime** asks for a biomedical entity matching a query, selected from
+forty fixed candidates; any native correct answer is accepted.
+
+### What do T, G, TG, BAG and A/A* contain?
+
+| Input | Additional text in ogbn-arxiv | Additional text in STaRK-Prime | Explicit edges |
+| --- | --- | --- | --- |
+| **T — Text** | Target paper | Candidate entities | No |
+| **G — Relations** | None | None | Directed citation edges / entity relations |
+| **TG — Joint input** | Target + context papers | Candidates + context entities | Same relations as G |
+| **BAG — Edge-ablated joint input** | Same text and nodes as TG | Same text and nodes as TG | Removed |
+| **A / A* — Comparator** | None | None | No |
+
+**What stays fixed?**
+
+- **arXiv:** all five conditions share the target, forty class options,
+  training-label anchors and graph-selected context identities. Held-out labels
+  are excluded from anchors. **A** is this anchor-based comparator; **T is not
+  graph-independent**, because context identities are graph-selected.
+- **Prime:** all five retain the query and the same candidate IDs, names and
+  types—even when additional entity descriptions are absent. G, TG and BAG
+  also retain relation-selected context entities; **A*** retains the candidate
+  evidence without those context entities or relations.
+
+**BAG removes only explicit edges from TG.** It is an input ablation, not
+“Build-a-Graph” prompting. Omitted information is unavailable to the model,
+not a statement that the corresponding edges do not exist.
+
 ![RQ2: arXiv accuracy and STaRK-Prime Hit@1 for all fourteen configurations under T, G, TG, BAG and A or A-star. Unsupported interfaces are marked U, not zero.](assets/benchmark/graph-text-decisions.svg)
 
 <p align="center">
@@ -78,9 +130,6 @@ not part of a blended score.
   <a href="docs/results.md#rq2-ogbn-arxiv-accuracy-">arXiv table</a> ·
   <a href="docs/results.md#rq2-stark-prime-hit1-">Prime table</a>
 </p>
-
-**T** = text · **G** = relations · **TG** = joint input ·
-**BAG** = TG without explicit edges · **A/A\*** = comparator without additional entity text or edges.
 
 ### Do explicit edges add value?
 
@@ -93,6 +142,8 @@ Intervals are paired, pointwise 95% bootstrap intervals—not recoverable from
 aggregate correct counts. **Relational input helps Jev over arXiv anchors
 alone, but adding edges to text-rich input has no clear positive effect.**
 High TG accuracy and a positive TG−BAG gain are different claims.
+G−A* also adds relation-selected context entities, so it is **not** an edge-only
+contrast. Likewise, arXiv TG−T adds context text as well as edges.
 
 <details>
 <summary><b>What these comparisons do—and do not—measure</b></summary>
@@ -115,17 +166,30 @@ High TG accuracy and a positive TG−BAG gain are different claims.
 
 **Four optimization tasks · ten graphs each · direct actions versus heuristic proposals.**
 
+| Task | Sequential decision | Objective and instances |
+| --- | --- | --- |
+| **TSP** | Append an unvisited city to the route | Minimize closed-tour length; TSPLIB EUC_2D, 76–225 cities |
+| **Signed MaxCut** | Assign the next vertex to one of two sides | Maximize the signed weight of crossing edges; OPTSICOM, 125 vertices, weights ±1 |
+| **Deterministic LT** | Choose two distinct seeds before diffusion | Maximize final active nodes; directed email-Eu-core subgraphs, 50–150 vertices |
+| **Binary modularity** | Assign the next vertex to one of at most two communities | Maximize resolution-1 modularity; ca-GrQc subgraphs, 50–150 vertices |
+
+The evaluator updates the partial solution after each choice. Later states
+therefore depend on the model's own earlier decisions, rather than following
+a shared precomputed trajectory.
+
+**A — Direct construction:** choose among all legal next actions.
+
+**C — Heuristic-proposal selection:** choose among distinct next actions
+proposed by four named fixed rules. Duplicate proposals are merged; a singleton
+is forced without a model call. These A/C mode names are local to RQ3 and are
+unrelated to RQ2's A/A* input comparator.
+
 ![RQ3: direct and heuristic-proposal gaps for every configuration on TSP, signed MaxCut, deterministic LT and binary modularity. Lower is better. Dashed bars and bracketed counts identify partial coverage; each task has a separate axis.](assets/benchmark/optimization-trajectories.svg)
 
 <p align="center">
   <a href="assets/benchmark/optimization-trajectories.svg">Full-size figure</a> ·
   <a href="docs/results.md#rq3-tsp--gap">Exact gaps and coverage</a>
 </p>
-
-**A — Direct construction:** choose among all legal next actions.
-
-**C — Heuristic-proposal selection:** choose among distinct next actions
-proposed by four fixed rules. A singleton is forced, without a model call.
 
 ### Proposals help—but how much is the model contributing?
 
@@ -137,9 +201,9 @@ proposed by four fixed rules. A singleton is forced, without a model call.
 | Binary modularity | 0.4784 Q | **0.0555 Q** | `greedy_completion`: **0.0361 Q** | 10/10 · 10/10 |
 
 Lower is better. Strong improvement over direct construction does **not**
-establish improvement over the proposal rules themselves. Proposals also do
-not help every configuration: GPT‑5.4's TSP gap increases from **29.49% to
-32.24%**; Astra's direct policy is better than its proposal policy on all four tasks.
+establish improvement over the proposal rules themselves. Fixed-rule and
+matched random-selection controls distinguish the quality of the proposal
+set from the model's contribution in choosing among its actions.
 
 <details>
 <summary><b>Coverage, references and fair comparisons</b></summary>
@@ -157,6 +221,9 @@ not help every configuration: GPT‑5.4's TSP gap increases from **29.49% to
   No completed primary solution in the three percentage-gap tasks improves on its reference.
 - Modularity residuals retain their sign. Non-GPT modularity objectives were rounded to
   four decimals before rebasing; additional printed digits are not extra precision.
+- LT activates both seeds simultaneously, using synchronous irreversible
+  diffusion, incoming-edge weights 1/indegree and threshold 1/2. It is not
+  the random-threshold LT model. Binary modularity permits a single community.
 
 </details>
 
@@ -177,11 +244,11 @@ distributed in the current compact bundle and have not been pooled into the
 primary results. Charts and tables render from the aggregate summary, not raw
 response replay; aggregate values do not reconstruct individual model outputs.
 
-**Readouts differ.** Native selection, Qwen constrained generation and
-candidate-token scoring retain their own support limits. GPT‑5.4 uses
-`reasoning_effort="none"` with verified zero reasoning tokens; Astra uses
-observed medium reasoning. Copilot's tool enum is not verified strict
-decoding. These comparisons do not establish a matched-hardware speed ranking.
+**Readouts differ.** Native selection, constrained generation and candidate-token
+scoring retain their own support limits. Inference budgets are not matched;
+the [model configuration table](docs/reproduction.md#model-configuration)
+records reasoning and decoding settings. These comparisons do not establish
+a matched-hardware speed ranking.
 
 ## Configuration
 

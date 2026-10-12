@@ -31,7 +31,7 @@ The ignored `output/` directory, model weights, raw provider ledgers, private
 deployment environments and manuscript sources are **not** included in a fresh
 clone. Historical originals are preserved in an ignored archive, outside the
 distributed bundle.
-No public DOI, arXiv identifier or manuscript-download URL is claimed.
+The paper is available on [arXiv](https://arxiv.org/abs/2610.06354).
 
 ## Offline aggregate rendering
 
@@ -97,6 +97,9 @@ bypass existing authorization, deployment, integrity or budget gates.
 The benchmark compares multiple configurations across all three research
 questions, not only GPT models. Reasoning/no-reasoning settings are part of
 the experimental configuration, alongside interface and capacity differences.
+Figures use plain model names and explain task predicates, matched input
+conditions and sequential objectives. Reasoning settings are recorded here
+rather than appended to the model labels.
 
 | Configuration | Interface | Thinking / output |
 | --- | --- | --- |

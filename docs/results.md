@@ -4,7 +4,7 @@ Manuscript-transcribed display values; not fresh experiments. Sources: Appendix 
 
 Primary aggregate results cover fourteen model-interface configurations across RQ1/RQ2/RQ3, with unsupported interfaces explicitly marked. Per-query and per-trajectory outputs are not distributed. Charts and tables render from the summary, not raw response replay.
 
-GPT-5.4 uses explicit no reasoning. GPT-6-Astra uses observed medium reasoning and is not a compute-matched baseline. Fixed model order is not an overall ranking.
+Fixed model order is not an overall ranking. See the [task and input definitions](../README.md#rq1--graph-cognition) and [model configurations](reproduction.md#model-configuration); inference budgets are not matched.
 
 ## RQ1: size-equal task accuracy (%)
 
@@ -22,8 +22,8 @@ GPT-5.4 uses explicit no reasoning. GPT-6-Astra uses observed medium reasoning a
 | Qwen3.8-27B | 96.2500 | 55.6616 | 85.0000 | 86.2500 | 72.5000 | 51.2500 |
 | Qwen2.5-72B | 98.7500 | 67.0833 | 78.7500 | 88.7500 | 91.2500 | 72.5000 |
 | Qwen3.5-4B score | 90.0000 | 17.5271 | 78.7500 | 50.0000 | 61.2500 | 55.0000 |
-| GPT-5.4 (none) | 100.0000 | 91.4154 | 92.5000 | 96.2500 | 97.5000 | 75.0000 |
-| GPT-6-Astra * | 100.0000 | 100.0000 | 100.0000 | 100.0000 | 100.0000 | 100.0000 |
+| GPT-5.4 | 100.0000 | 91.4154 | 92.5000 | 96.2500 | 97.5000 | 75.0000 |
+| GPT-6-Astra | 100.0000 | 100.0000 | 100.0000 | 100.0000 | 100.0000 | 100.0000 |
 
 Higher is better. Accuracy is averaged equally over sizes 8–12 within each task, not pooled across queries. Degree has 400 queries; each other task has 80.
 
@@ -43,10 +43,10 @@ Higher is better. Accuracy is averaged equally over sizes 8–12 within each tas
 | Qwen3.8-27B | 62 | 60 | 71 | 70 | 51 |
 | Qwen2.5-72B | 51 | 58 | 59 | 52 | 45 |
 | Qwen3.5-4B score | U | U | U | U | U |
-| GPT-5.4 (none) | 73 | 61 | 73 | 72 | 48 |
-| GPT-6-Astra * | 73 | 60 | 76 | 73 | 55 |
+| GPT-5.4 | 73 | 61 | 73 | 72 | 48 |
+| GPT-6-Astra | 73 | 60 | 76 | 73 | 55 |
 
-100 queries per condition; higher is better. U = unsupported, not zero. Prime uses gold-containing candidate sets, not end-to-end retrieval.
+100 queries per condition; higher is better. U = unsupported, not zero. Prime uses gold-containing candidate sets, not end-to-end retrieval. [T, G, TG, BAG and A/A* definitions](../README.md#rq2--graph-and-text).
 
 ## RQ2: STaRK-Prime Hit@1 (%)
 
@@ -64,10 +64,10 @@ Higher is better. Accuracy is averaged equally over sizes 8–12 within each tas
 | Qwen3.8-27B | 53 | 50 | 51 | 51 | 48 |
 | Qwen2.5-72B | 39 | 35 | 33 | 35 | 36 |
 | Qwen3.5-4B score | U | U | U | U | U |
-| GPT-5.4 (none) | 60 | 51 | 53 | 56 | 56 |
-| GPT-6-Astra * | 69 | 69 | 67 | 73 | 71 |
+| GPT-5.4 | 60 | 51 | 53 | 56 | 56 |
+| GPT-6-Astra | 69 | 69 | 67 | 73 | 71 |
 
-100 queries per condition; higher is better. U = unsupported, not zero. Prime uses gold-containing candidate sets, not end-to-end retrieval.
+100 queries per condition; higher is better. U = unsupported, not zero. Prime uses gold-containing candidate sets, not end-to-end retrieval. [T, G, TG, BAG and A/A* definitions](../README.md#rq2--graph-and-text).
 
 ## RQ3: TSP (% gap)
 
@@ -85,8 +85,8 @@ Higher is better. Accuracy is averaged equally over sizes 8–12 within each tas
 | Qwen3.8-27B | 51.4061 | 10/10 | 28.8632 | 10/10 |
 | Qwen2.5-72B | 116.9987 | 10/10 | 29.2820 | 10/10 |
 | Qwen3.5-4B score | — | 0/10 | — | 0/10 |
-| GPT-5.4 (none) | 29.4859 | 10/10 | 32.2440 | 10/10 |
-| GPT-6-Astra * | 2.2117 | 10/10 | 6.2354 | 10/10 |
+| GPT-5.4 | 29.4859 | 10/10 | 32.2440 | 10/10 |
+| GPT-6-Astra | 2.2117 | 10/10 | 6.2354 | 10/10 |
 
 Lower is better. Means use completed trajectories; partial subsets are not ranked against full coverage. A dash is undefined quality, not zero. A zero-gap forced-only completion does not establish model support.
 
@@ -106,8 +106,8 @@ Lower is better. Means use completed trajectories; partial subsets are not ranke
 | Qwen3.8-27B | 99.8284 | 10/10 | 23.1526 | 10/10 |
 | Qwen2.5-72B | 105.9990 | 10/10 | 11.5578 | 10/10 |
 | Qwen3.5-4B score | — | 0/10 | — | 0/10 |
-| GPT-5.4 (none) | 99.6673 | 10/10 | 9.4116 | 10/10 |
-| GPT-6-Astra * | 6.3073 | 10/10 | 7.7818 | 10/10 |
+| GPT-5.4 | 99.6673 | 10/10 | 9.4116 | 10/10 |
+| GPT-6-Astra | 6.3073 | 10/10 | 7.7818 | 10/10 |
 
 Lower is better. Means use completed trajectories; partial subsets are not ranked against full coverage. A dash is undefined quality, not zero. A zero-gap forced-only completion does not establish model support.
 
@@ -127,8 +127,8 @@ Lower is better. Means use completed trajectories; partial subsets are not ranke
 | Qwen3.8-27B | 43.1821 | 10/10 | 15.9568 | 10/10 |
 | Qwen2.5-72B | 39.9037 | 10/10 | 18.0717 | 10/10 |
 | Qwen3.5-4B score | — | 0/10 | 0.0000 | 1/10 |
-| GPT-5.4 (none) | 33.4312 | 10/10 | 5.4750 | 10/10 |
-| GPT-6-Astra * | 0.0000 | 10/10 | 0.4000 | 10/10 |
+| GPT-5.4 | 33.4312 | 10/10 | 5.4750 | 10/10 |
+| GPT-6-Astra | 0.0000 | 10/10 | 0.4000 | 10/10 |
 
 Lower is better. Means use completed trajectories; partial subsets are not ranked against full coverage. A dash is undefined quality, not zero. A zero-gap forced-only completion does not establish model support.
 
@@ -148,8 +148,8 @@ Lower is better. Means use completed trajectories; partial subsets are not ranke
 | Qwen3.8-27B | 0.4752832 | 10/10 | 0.1086932 | 10/10 |
 | Qwen2.5-72B | 0.3758732 | 10/10 | 0.0849032 | 10/10 |
 | Qwen3.5-4B score | 0.4804942 | 4/10 | 0.1562265 | 1/10 |
-| GPT-5.4 (none) | 0.4042398 | 10/10 | 0.0422862 | 10/10 |
-| GPT-6-Astra * | 0.0002611 | 10/10 | 0.0129828 | 10/10 |
+| GPT-5.4 | 0.4042398 | 10/10 | 0.0422862 | 10/10 |
+| GPT-6-Astra | 0.0002611 | 10/10 | 0.0129828 | 10/10 |
 
 Lower is better. Means use completed trajectories; partial subsets are not ranked against full coverage. A dash is undefined quality, not zero. A zero-gap forced-only completion does not establish model support.
 

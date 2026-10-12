@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="802" viewBox="0 0 1120 802" role="img" aria-labelledby="title desc">
-<title id="title">More information is not always better</title><desc id="desc">All fourteen configurations. Values are percentages; higher is better. Astra is a separate reasoning-enabled reference. U means unsupported.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1000" viewBox="0 0 1120 1000" role="img" aria-labelledby="title desc">
+<title id="title">Graph-text decisions under matched inputs</title><desc id="desc">All fourteen configurations. Values are percentages; higher is better. Task and input-condition definitions appear below the results. U means unsupported.</desc>
 <g font-family="Arial, Helvetica, sans-serif">
-<rect x="0" y="0" width="1120" height="802" rx="18" fill="#ffffff"/>
-<rect x="1" y="1" width="1118" height="800" rx="18" fill="none" stroke="#dbe4ee"/>
+<rect x="0" y="0" width="1120" height="1000" rx="18" fill="#ffffff"/>
+<rect x="1" y="1" width="1118" height="998" rx="18" fill="none" stroke="#dbe4ee"/>
 <text x="30" y="37" font-size="14" fill="#087f8c" font-weight="700" text-anchor="start">02 / GRAPH + TEXT</text>
-<text x="30" y="75" font-size="30" fill="#172b4d" font-weight="700" text-anchor="start">More information is not always better</text>
+<text x="30" y="75" font-size="30" fill="#172b4d" font-weight="700" text-anchor="start">Graph-text decisions under matched inputs</text>
 <text x="30" y="105" font-size="16" fill="#52647d" font-weight="400" text-anchor="start">100 queries per dataset  /  Same query IDs and candidates across five conditions</text>
-<text x="443" y="135" font-size="16" fill="#4258b8" font-weight="700" text-anchor="middle">ogbn-arxiv  /  Accuracy</text>
+<text x="443" y="135" font-size="16" fill="#4258b8" font-weight="700" text-anchor="middle">ogbn-arxiv  /  40-class accuracy</text>
 <text x="858" y="135" font-size="16" fill="#087f8c" font-weight="700" text-anchor="middle">STaRK-Prime  /  Hit@1</text>
 <text x="284.0" y="155" font-size="15" fill="#52647d" font-weight="700" text-anchor="middle">T</text>
 <text x="362.0" y="155" font-size="15" fill="#52647d" font-weight="700" text-anchor="middle">G</text>
@@ -283,8 +283,8 @@
 <text x="932.0" y="611" font-size="18" fill="#172b4d" font-weight="600" text-anchor="middle">U</text>
 <rect x="974" y="590" width="72" height="30" rx="5" fill="#eef1f5"/>
 <text x="1010.0" y="611" font-size="18" fill="#172b4d" font-weight="600" text-anchor="middle">U</text>
-<rect x="30" y="635" width="4" height="16" rx="2" fill="#245fc7"/>
-<text x="43" y="648" font-size="17" fill="#172b4d" font-weight="700" text-anchor="start">GPT-5.4 (none)</text>
+<rect x="30" y="635" width="4" height="16" rx="2" fill="#4258b8"/>
+<text x="43" y="648" font-size="17" fill="#172b4d" font-weight="400" text-anchor="start">GPT-5.4</text>
 <rect x="248" y="627" width="72" height="30" rx="5" fill="#44929a"/>
 <text x="284.0" y="648" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">73</text>
 <rect x="326" y="627" width="72" height="30" rx="5" fill="#60a2a9"/>
@@ -305,9 +305,8 @@
 <text x="932.0" y="648" font-size="18" fill="#172b4d" font-weight="600" text-anchor="middle">56</text>
 <rect x="974" y="627" width="72" height="30" rx="5" fill="#6ca9af"/>
 <text x="1010.0" y="648" font-size="18" fill="#172b4d" font-weight="600" text-anchor="middle">56</text>
-<rect x="18" y="661" width="1084" height="36" rx="7" fill="#f4f0f8"/>
-<rect x="30" y="672" width="4" height="16" rx="2" fill="#7850a3"/>
-<text x="43" y="685" font-size="17" fill="#172b4d" font-weight="700" text-anchor="start">GPT-6-Astra *</text>
+<rect x="30" y="672" width="4" height="16" rx="2" fill="#4258b8"/>
+<text x="43" y="685" font-size="17" fill="#172b4d" font-weight="400" text-anchor="start">GPT-6-Astra</text>
 <rect x="248" y="664" width="72" height="30" rx="5" fill="#44929a"/>
 <text x="284.0" y="685" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">73</text>
 <rect x="326" y="664" width="72" height="30" rx="5" fill="#62a4aa"/>
@@ -431,5 +430,27 @@
 <rect x="372.0" y="748" width="1.5" height="13" rx="0" fill="#086d79"/>
 <rect x="373.5" y="748" width="1.5" height="13" rx="0" fill="#066c78"/>
 <text x="391" y="761" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">0-100%</text>
-<text x="30" y="784" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">* Astra: observed medium reasoning. GPT-5.4: explicit none. Fixed model order, not a combined rank.</text>
+<rect x="30" y="790" width="204" height="112" rx="8" fill="#f0f6fa"/>
+<text x="42" y="819" font-size="20" fill="#087f8c" font-weight="700" text-anchor="start">T</text>
+<text x="42" y="850" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Target / candidate text</text>
+<text x="42" y="875" font-size="13" fill="#52647d" font-weight="400" text-anchor="start">No explicit edges</text>
+<rect x="244" y="790" width="204" height="112" rx="8" fill="#f0f6fa"/>
+<text x="256" y="819" font-size="20" fill="#087f8c" font-weight="700" text-anchor="start">G</text>
+<text x="256" y="850" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Relational evidence</text>
+<text x="256" y="875" font-size="13" fill="#52647d" font-weight="400" text-anchor="start">No added entity descriptions</text>
+<rect x="458" y="790" width="204" height="112" rx="8" fill="#f0f6fa"/>
+<text x="470" y="819" font-size="20" fill="#087f8c" font-weight="700" text-anchor="start">TG</text>
+<text x="470" y="850" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Entity + context text</text>
+<text x="470" y="875" font-size="13" fill="#52647d" font-weight="400" text-anchor="start">With explicit edges</text>
+<rect x="672" y="790" width="204" height="112" rx="8" fill="#f0f6fa"/>
+<text x="684" y="819" font-size="20" fill="#087f8c" font-weight="700" text-anchor="start">BAG</text>
+<text x="684" y="850" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Same nodes + text as TG</text>
+<text x="684" y="875" font-size="13" fill="#52647d" font-weight="400" text-anchor="start">Only explicit edges removed</text>
+<rect x="886" y="790" width="204" height="112" rx="8" fill="#f0f6fa"/>
+<text x="898" y="819" font-size="20" fill="#087f8c" font-weight="700" text-anchor="start">A / A*</text>
+<text x="898" y="850" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Baseline evidence</text>
+<text x="898" y="875" font-size="13" fill="#52647d" font-weight="400" text-anchor="start">No added descriptions / edges</text>
+<text x="30" y="928" font-size="16" fill="#172b4d" font-weight="700" text-anchor="start">TG - BAG: explicit-edge contribution. G - A/A*: relational evidence over the baseline.</text>
+<text x="30" y="954" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">arXiv: shared training-label anchors and graph-selected context IDs; T is not graph-independent.</text>
+<text x="30" y="980" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Prime: query + 40 candidate IDs, names and types in every input; G/TG/BAG also retain context entities.</text>
 </g></svg>

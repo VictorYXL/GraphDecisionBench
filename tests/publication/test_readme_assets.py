@@ -45,9 +45,11 @@ class ReadmeAssetsTests(unittest.TestCase):
 
     def test_all_model_aggregates_match_frozen_publication_snapshot(self):
         # This is a preservation check, not independent raw-output recomputation.
-        encoded = json.dumps(self.data["models"], sort_keys=True, separators=(",", ":")).encode()
+        values = [{key: value for key, value in model.items() if key != "label"}
+                  for model in self.data["models"]]
+        encoded = json.dumps(values, sort_keys=True, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(encoded).hexdigest(),
-                         "e68145619b535824b0f9a164f52508894053b9ad2295ab5f7974ca366b1dd18c")
+                         "ceff4a3b97f9a8669d3c65c8ac0869d6cb28f12e62cab0f96757df006aacf2b6")
 
     def test_aggregate_shapes_ranges_and_completion_semantics(self):
         models = self.data["models"]
@@ -134,6 +136,56 @@ class ReadmeAssetsTests(unittest.TestCase):
                     slugs = [re.sub(r"[^\w -]", "", heading.lower()).replace(" ", "-")
                              for heading in headings]
                     self.assertIn(anchor, slugs, (relative, link))
+
+    def test_model_labels_do_not_encode_or_highlight_reasoning_settings(self):
+        models = {model["id"]: model for model in self.data["models"]}
+        self.assertEqual(models["gpt54"]["label"], "GPT-5.4")
+        self.assertEqual(models["astra"]["label"], "GPT-6-Astra")
+        for model_id in ("qwen27", "gpt54", "astra"):
+            svg = renderer.SVG(100, "Labels", "Model labels use the same baseline style.")
+            renderer.label(svg, models[model_id], 30, 40)
+            root = ET.fromstring(svg.finish())
+            ns = {"s": "http://www.w3.org/2000/svg"}
+            label = root.find(".//s:text", ns)
+            self.assertEqual(label.attrib["font-weight"], "400")
+            self.assertEqual(root.findall(".//s:rect", ns)[-1].attrib["fill"], renderer.BLUE)
+        for path, content in renderer.build(self.data).items():
+            if path.suffix == ".svg":
+                self.assertNotIn("(none)", content)
+                self.assertNotIn("explicit none", content)
+                root = ET.fromstring(content)
+                for label in root.findall(".//{http://www.w3.org/2000/svg}text"):
+                    if label.text in ("GPT-5.4", "GPT-6-Astra"):
+                        self.assertEqual(label.attrib["font-weight"], "400")
+        settings = (REPO / "docs/reproduction.md").read_text()
+        self.assertIn('reasoning_effort="none"', settings)
+        self.assertIn("medium observed", settings)
+
+    def test_readme_uses_current_task_focused_figures(self):
+        readme = (REPO / "README.md").read_text()
+        generated = renderer.build(self.data)
+        images = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", readme)
+        self.assertEqual(len(images), 3)
+        for link in images:
+            self.assertIn(REPO / link, generated)
+            self.assertNotIn("(none)", (REPO / link).read_text())
+        structural = generated[ASSETS / "structural-queries.svg"]
+        for text in ("simple cycle", "path between", "at most two edges",
+                     "component count", "including isolates"):
+            self.assertIn(text, structural)
+        graph_text = generated[ASSETS / "graph-text-decisions.svg"]
+        for text in ("Target / candidate text", "Relational evidence", "Entity + context text",
+                     "Same nodes + text as TG", "Only explicit edges removed",
+                     "A / A*", "TG - BAG", "G - A/A*", "names and types"):
+            self.assertIn(text, graph_text)
+        optimization = generated[ASSETS / "optimization-trajectories.svg"]
+        for text in ("closed-tour length", "signed crossing-edge weight", "two seeds",
+                     "at most two groups", "all legal next actions", "four fixed rules"):
+            self.assertIn(text, optimization)
+        for text in ("Exact degree", "Pairwise connectivity", "Distance threshold",
+                     "Articulation point", "training-label anchors",
+                     "not** an edge-only", "unrelated to RQ2"):
+            self.assertIn(text, readme)
 
 
 if __name__ == "__main__":

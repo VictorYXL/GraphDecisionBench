@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="802" viewBox="0 0 1120 802" role="img" aria-labelledby="title desc">
-<title id="title">Structure is not a single skill</title><desc id="desc">All fourteen configurations. Values are percentages; higher is better. Astra is a separate reasoning-enabled reference. U means unsupported.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="952" viewBox="0 0 1120 952" role="img" aria-labelledby="title desc">
+<title id="title">Six structural query tasks</title><desc id="desc">All fourteen configurations. Values are percentages; higher is better. Task and input-condition definitions appear below the results. U means unsupported.</desc>
 <g font-family="Arial, Helvetica, sans-serif">
-<rect x="0" y="0" width="1120" height="802" rx="18" fill="#ffffff"/>
-<rect x="1" y="1" width="1118" height="800" rx="18" fill="none" stroke="#dbe4ee"/>
+<rect x="0" y="0" width="1120" height="952" rx="18" fill="#ffffff"/>
+<rect x="1" y="1" width="1118" height="950" rx="18" fill="none" stroke="#dbe4ee"/>
 <text x="30" y="37" font-size="14" fill="#087f8c" font-weight="700" text-anchor="start">01 / GRAPH COGNITION</text>
-<text x="30" y="75" font-size="30" fill="#172b4d" font-weight="700" text-anchor="start">Structure is not a single skill</text>
+<text x="30" y="75" font-size="30" fill="#172b4d" font-weight="700" text-anchor="start">Six structural query tasks</text>
 <text x="30" y="105" font-size="16" fill="#52647d" font-weight="400" text-anchor="start">800 queries  /  4 data sources  /  Equal weight per size, 8-12 vertices</text>
 <text x="329.0" y="155" font-size="15" fill="#52647d" font-weight="700" text-anchor="middle">Adjacency</text>
 <text x="461.0" y="155" font-size="15" fill="#52647d" font-weight="700" text-anchor="middle">Degree</text>
@@ -181,8 +181,8 @@
 <text x="857.0" y="611" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">61.25</text>
 <rect x="926" y="590" width="126" height="30" rx="5" fill="#6eabb1"/>
 <text x="989.0" y="611" font-size="18" fill="#172b4d" font-weight="600" text-anchor="middle">55.00</text>
-<rect x="30" y="635" width="4" height="16" rx="2" fill="#245fc7"/>
-<text x="43" y="648" font-size="17" fill="#172b4d" font-weight="700" text-anchor="start">GPT-5.4 (none)</text>
+<rect x="30" y="635" width="4" height="16" rx="2" fill="#4258b8"/>
+<text x="43" y="648" font-size="17" fill="#172b4d" font-weight="400" text-anchor="start">GPT-5.4</text>
 <rect x="266" y="627" width="126" height="30" rx="5" fill="#066c78"/>
 <text x="329.0" y="648" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">100.00</text>
 <rect x="398" y="627" width="126" height="30" rx="5" fill="#1a7883"/>
@@ -195,9 +195,8 @@
 <text x="857.0" y="648" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">97.50</text>
 <rect x="926" y="627" width="126" height="30" rx="5" fill="#408f98"/>
 <text x="989.0" y="648" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">75.00</text>
-<rect x="18" y="661" width="1084" height="36" rx="7" fill="#f4f0f8"/>
-<rect x="30" y="672" width="4" height="16" rx="2" fill="#7850a3"/>
-<text x="43" y="685" font-size="17" fill="#172b4d" font-weight="700" text-anchor="start">GPT-6-Astra *</text>
+<rect x="30" y="672" width="4" height="16" rx="2" fill="#4258b8"/>
+<text x="43" y="685" font-size="17" fill="#172b4d" font-weight="400" text-anchor="start">GPT-6-Astra</text>
 <rect x="266" y="664" width="126" height="30" rx="5" fill="#066c78"/>
 <text x="329.0" y="685" font-size="18" fill="#ffffff" font-weight="600" text-anchor="middle">100.00</text>
 <rect x="398" y="664" width="126" height="30" rx="5" fill="#066c78"/>
@@ -313,5 +312,18 @@
 <rect x="372.0" y="748" width="1.5" height="13" rx="0" fill="#086d79"/>
 <rect x="373.5" y="748" width="1.5" height="13" rx="0" fill="#066c78"/>
 <text x="391" y="761" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">0-100%</text>
-<text x="30" y="784" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">* Astra: observed medium reasoning. GPT-5.4: explicit none. Fixed model order, not a combined rank.</text>
+<text x="30" y="805" font-size="14" fill="#087f8c" font-weight="700" text-anchor="start">WHAT DOES EACH QUERY ASK?</text>
+<text x="30" y="833" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Adjacency</text>
+<text x="136" y="833" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">Does an edge connect the two vertices?</text>
+<text x="565" y="833" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Degree</text>
+<text x="671" y="833" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">How many neighbors does the vertex have?</text>
+<text x="30" y="864" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Cycle</text>
+<text x="136" y="864" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">Does any component contain a simple cycle?</text>
+<text x="565" y="864" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Connectivity</text>
+<text x="671" y="864" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">Is there a path between the two vertices?</text>
+<text x="30" y="895" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Distance</text>
+<text x="136" y="895" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">Is the shortest path at most two edges?</text>
+<text x="565" y="895" font-size="15" fill="#172b4d" font-weight="700" text-anchor="start">Articulation</text>
+<text x="671" y="895" font-size="15" fill="#52647d" font-weight="400" text-anchor="start">Does deleting the vertex increase component count?</text>
+<text x="30" y="937" font-size="14" fill="#52647d" font-weight="400" text-anchor="start">Answer on the supplied undirected graph, including isolates. Degree: 0 to n-1; other tasks: yes/no.</text>
 </g></svg>
